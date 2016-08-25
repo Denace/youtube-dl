@@ -1,6 +1,8 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import re
+
 from .common import InfoExtractor
 from ..utils import (
     ExtractorError,
@@ -30,7 +32,7 @@ class PladformIE(InfoExtractor):
         'info_dict': {
             'id': '100183293',
             'ext': 'mp4',
-            'title': 'Тайны перевала Дятлова • Тайна перевала Дятлова 1 серия 2 часть',
+            'title': 'Тайны перевала Дятлова • 1 серия 2 часть',
             'description': 'Документальный сериал-расследование одной из самых жутких тайн ХХ века',
             'thumbnail': 're:^https?://.*\.jpg$',
             'duration': 694,
@@ -43,6 +45,13 @@ class PladformIE(InfoExtractor):
         'url': 'http://video.pladform.ru/catalog/video/videoid/100183293/vkcid/0',
         'only_matching': True,
     }]
+
+    @staticmethod
+    def _extract_url(webpage):
+        mobj = re.search(
+            r'<iframe[^>]+src=(["\'])(?P<url>(?:https?:)?//out\.pladform\.ru/player\?.+?)\1', webpage)
+        if mobj:
+            return mobj.group('url')
 
     def _real_extract(self, url):
         video_id = self._match_id(url)
